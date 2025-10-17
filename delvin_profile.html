@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Resume | Delvin Devis</title>
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: A portfolio-style SPA with a fixed top navigation bar for quick, smooth scrolling to key sections (Skills, Experience, Education). This structure is more engaging than a linear document. The core interactions are: 1) A Skills Doughnut Chart for a high-level overview of technical domains. 2) An interactive Project Gallery with clickable cards that open modals for detailed descriptions, allowing users to drill down into specifics without leaving the page. 3) A Bar Chart visualizing academic performance to make high scores more impactful. This design transforms the static resume into an exploratory experience, letting recruiters quickly find relevant information and understand the depth of the candidate's experience. -->
+    <!-- Visualization & Content Choices: 
+        - Skills Data -> Goal: Inform/Organize -> Viz: Doughnut Chart -> Interaction: Hover Tooltips -> Justification: Provides a quick summary of skill distribution. Library: Chart.js.
+        - Education Scores -> Goal: Inform/Compare -> Viz: Bar Chart -> Interaction: Hover Tooltips -> Justification: Makes academic performance visually impactful. Library: Chart.js.
+        - Project Details -> Goal: Organize/Inform -> Presentation: Card Grid + Modals -> Interaction: Click to open modal -> Justification: Prevents information overload while allowing deep dives. Method: HTML/JS/Tailwind.
+        - Achievements/Internship -> Goal: Inform -> Presentation: Styled Cards -> Interaction: None -> Justification: Clean and professional presentation. Method: HTML/Tailwind. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .modal-overlay {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-stone-100 text-stone-800">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-teal-700">Delvin Devis</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#summary" class="text-stone-600 hover:text-teal-600 transition duration-300">Profile</a>
+                <a href="#skills" class="text-stone-600 hover:text-teal-600 transition duration-300">Skills</a>
+                <a href="#experience" class="text-stone-600 hover:text-teal-600 transition duration-300">Experience</a>
+                <a href="#education" class="text-stone-600 hover:text-teal-600 transition duration-300">Education</a>
+                <a href="#achievements" class="text-stone-600 hover:text-teal-600 transition duration-300">Achievements</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-btn" class="text-stone-600 focus:outline-none">
+                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 flex flex-col space-y-2">
+            <a href="#summary" class="text-stone-600 hover:text-teal-600 transition duration-300">Profile</a>
+            <a href="#skills" class="text-stone-600 hover:text-teal-600 transition duration-300">Skills</a>
+            <a href="#experience" class="text-stone-600 hover:text-teal-600 transition duration-300">Experience</a>
+            <a href="#education" class="text-stone-600 hover:text-teal-600 transition duration-300">Education</a>
+            <a href="#achievements" class="text-stone-600 hover:text-teal-600 transition duration-300">Achievements</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <section id="summary" class="text-center min-h-[60vh] flex flex-col justify-center items-center">
+            <h2 class="text-4xl md:text-5xl font-bold text-stone-900 mb-4">DELVIN DEVIS</h2>
+            <p class="text-lg text-teal-600 font-medium mb-8">Full-Stack Developer & Cloud Enthusiast</p>
+            <p class="max-w-3xl text-stone-600 leading-relaxed text-base md:text-lg">
+                Full-Stack B.Tech Graduate (7.71 CGPA) with expertise in Python/Django, React, and PostgreSQL. Proven ability to build, containerize with Docker, and deploy robust web applications to the cloud. Dedicated problem-solver, having completed 90+ LeetCode problems and recognized as a District Winner for innovation.
+            </p>
+            <div class="flex space-x-6 mt-10">
+                <a href="mailto:delvindevis04@gmail.com" class="text-stone-500 hover:text-teal-600 transition duration-300" aria-label="Email">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"></path></svg>
+                </a>
+                <a href="https://www.linkedin.com/in/delvindevis" target="_blank" rel="noopener noreferrer" class="text-stone-500 hover:text-teal-600 transition duration-300" aria-label="LinkedIn">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg>
+                </a>
+                <a href="https://github.com/delvin7" target="_blank" rel="noopener noreferrer" class="text-stone-500 hover:text-teal-600 transition duration-300" aria-label="GitHub">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path></svg>
+                </a>
+            </div>
+        </section>
+
+        <section id="skills" class="py-20">
+            <h2 class="text-3xl font-bold text-center mb-4">Technical Skills</h2>
+            <p class="text-center text-stone-600 max-w-2xl mx-auto mb-12">This section provides a visual breakdown of my technical competencies, categorized by area of expertise. The chart illustrates the distribution of my skills, while the tags below offer a comprehensive list of the technologies I've worked with.</p>
+            <div class="chart-container">
+                <canvas id="skillsChart"></canvas>
+            </div>
+             <div class="max-w-4xl mx-auto mt-12 text-center">
+                <div id="skills-tags" class="flex flex-wrap justify-center gap-3"></div>
+            </div>
+        </section>
+
+        <section id="experience" class="py-20 bg-white rounded-2xl">
+            <h2 class="text-3xl font-bold text-center mb-4">Experience & Projects</h2>
+             <p class="text-center text-stone-600 max-w-2xl mx-auto mb-12">My practical experience is showcased through my professional internship and a collection of key projects. Each project demonstrates my ability to apply technology to solve real-world problems. Click on any project to learn more about its objectives and the technologies used.</p>
+            <div id="experience-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
+        </section>
+
+        <section id="education" class="py-20">
+            <h2 class="text-3xl font-bold text-center mb-4">Education & Academic Performance</h2>
+             <p class="text-center text-stone-600 max-w-2xl mx-auto mb-12">My academic background has provided a strong theoretical foundation in computer science. The chart below visualizes my performance across different stages of my education, reflecting a consistent record of high achievement.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-center">
+                 <div class="lg:col-span-2 space-y-6" id="education-text">
+                </div>
+                <div class="lg:col-span-3">
+                    <div class="chart-container max-w-full">
+                        <canvas id="educationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="achievements" class="py-20">
+            <h2 class="text-3xl font-bold text-center mb-12">Achievements & Certifications</h2>
+            <div id="achievements-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-stone-800 text-white py-8 text-center">
+        <p>&copy; 2025 Delvin Devis. All rights reserved.</p>
+        <p class="text-stone-400">Interactive resume created to showcase technical and design skills.</p>
+    </footer>
+
+    <div id="project-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center p-4 z-50 opacity-0 pointer-events-none">
+        <div class="modal-content bg-white rounded-lg shadow-2xl w-full max-w-2xl p-8 relative transform scale-95">
+            <button id="modal-close-btn" class="absolute top-4 right-4 text-stone-500 hover:text-stone-800 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h3 id="modal-title" class="text-2xl font-bold mb-4"></h3>
+            <p id="modal-description" class="text-stone-600 mb-6"></p>
+            <div id="modal-details" class="space-y-2 text-stone-700 mb-6"></div>
+            <h4 class="font-semibold mb-2">Technologies Used:</h4>
+            <div id="modal-tags" class="flex flex-wrap gap-2"></div>
+            <a id="modal-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-block mt-6 bg-teal-600 text-white px-5 py-2 rounded-lg hover:bg-teal-700 transition duration-300">View Project</a>
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const appData = {
+        skills: {
+            "Core Languages": ["Python", "JavaScript", "HTML", "CSS"],
+            "Full-Stack/Frameworks": ["Django", "React", "Node.js", "REST API", "Responsive UI"],
+            "Database/Cloud": ["PostgreSQL", "ORM", "Firebase", "Render"],
+            "DevOps/Tools": ["GitHub", "Git", "Docker", "GitHub Pages", "VS Code"],
+            "Specialized": ["Blockchain", "IPFS", "Flutter", "Wallet Auth"]
+        },
+        experience: [
+            {
+                type: 'internship',
+                title: 'Cloud Computing Intern',
+                company: 'Pacelab',
+                short: 'Engineered and dockerized a demo project, successfully achieving cloud deployment.',
+                description: 'As a Cloud Computing Intern, I was responsible for containerizing a demonstration project using Docker and deploying it to a cloud environment. This role provided extensive hands-on experience with modern DevOps practices.',
+                details: [
+                    'Engineered and dockerized a demo project for cloud deployment.',
+                    'Optimized performance and gained experience in containerization best practices.'
+                ],
+                tags: ['Docker', 'Cloud Deployment']
+            },
+            {
+                type: 'project',
+                title: 'Full-Stack E-commerce Website',
+                link: 'https://ecommerce-2siq.onrender.com/',
+                short: 'A robust e-commerce platform built with Django and React, deployed on Render.',
+                description: 'Architected and developed a full-featured e-commerce platform from the ground up. The system includes dynamic product listings, category-based navigation, and a complete checkout process for customers. It also features a secure admin panel for product and order management.',
+                details: [
+                    'Architected a robust platform with Django and React.',
+                    'Implemented full CRUD functionality for admins and comprehensive customer flows.',
+                    'Managed data efficiency using PostgreSQL with ORM.',
+                    'Deployed the application on Render for live accessibility.'
+                ],
+                tags: ['Django', 'Python', 'React', 'JavaScript', 'PostgreSQL', 'ORM']
+            },
+            {
+                type: 'project',
+                title: 'Traffic Violation Reporting dApp',
+                link: null,
+                short: 'A decentralized application for reporting traffic violations using Blockchain and IPFS.',
+                description: 'This project is a decentralized application designed to empower citizens to report traffic violations securely. The system uses a Flutter mobile app for reporting, IPFS for decentralized file storage, and a React-based admin panel for managing reports, all secured with wallet-based authentication.',
+                details: [
+                    'Developed a Flutter mobile app for reporting with uploads to IPFS.',
+                    'Built a React admin panel to efficiently review and manage violations.',
+                    'Secured backend access using Node.js and wallet-based authentication.'
+                ],
+                tags: ['Node.js', 'Flutter', 'React', 'Blockchain', 'IPFS', 'Docker']
+            },
+            {
+                type: 'project',
+                title: 'TrailerHub using React',
+                link: 'https://delvin7.github.io/netflix/',
+                short: 'A responsive React app for browsing and watching movie trailers via the TMDB API.',
+                description: 'TrailerHub is a responsive web application that allows users to discover and watch movie trailers. It leverages the TMDB API to fetch dynamic, real-time movie data and provides an intuitive, user-friendly interface for browsing content.',
+                details: [
+                    'Created a responsive React.js application for browsing trailers.',
+                    'Integrated the TMDB API to fetch dynamic movie data.',
+                    'Deployed the project on GitHub Pages for live access.'
+                ],
+                tags: ['React.js', 'HTML', 'CSS', 'JavaScript', 'TMDB API']
+            },
+             {
+                type: 'project',
+                title: 'Virtual Mouse Using Hand Gesture',
+                link: null,
+                short: 'An innovative virtual mouse controlled by real-time hand gesture recognition using OpenCV.',
+                description: 'This project explores human-computer interaction by creating a virtual mouse controlled by hand gestures. Using a standard webcam, the application employs OpenCV to detect hand movements in real-time and translate them into smooth cursor control on the screen.',
+                details: [
+                    'Designed an innovative virtual mouse controlled by hand gestures.',
+                    'Implemented OpenCV for real-time gesture detection and smooth cursor control.'
+                ],
+                tags: ['Python', 'OpenCV', 'GUI Libraries']
+            }
+        ],
+        education: [
+            {
+                years: '2021-2025',
+                degree: 'B-Tech in Computer Science & Engineering',
+                institution: 'Sahrdaya College of Engineering & Technology',
+                score: 7.71,
+                type: 'CGPA',
+                value: 77.1
+            },
+            {
+                years: '2019-2021',
+                degree: 'CLASS 12',
+                institution: 'C.J.M.A.H.S.S. VARANDARAPPILLY',
+                score: 93.4,
+                type: '%',
+                value: 93.4
+            },
+            {
+                years: '2019',
+                degree: 'CLASS 10',
+                institution: 'C.J.M.A.H.S.S VARANDARAPPILLY',
+                score: 100,
+                type: '%',
+                value: 100
+            }
+        ],
+        achievements: [
+            {
+                icon: '🏆',
+                title: 'Second Place in Hackathon',
+                description: 'Awarded for performance in a competitive hackathon conducted by TechX Infinia.'
+            },
+            {
+                icon: '💡',
+                title: 'District Winner, Young Innovators Program 5.0',
+                description: 'Recognized by the Kerala Development and Innovation Strategic Council.'
+            },
+            {
+                icon: '📜',
+                title: 'NPTEL Certification in Python',
+                description: 'Completed with Elite distinction, demonstrating high proficiency in Python programming.'
+            }
+        ]
+    };
+
+    const skillColors = {
+        "Core Languages": 'rgba(13, 148, 136, 0.8)',
+        "Full-Stack/Frameworks": 'rgba(8, 126, 126, 0.8)',
+        "Database/Cloud": 'rgba(15, 118, 110, 0.8)',
+        "DevOps/Tools": 'rgba(20, 83, 45, 0.8)',
+        "Specialized": 'rgba(6, 78, 79, 0.8)'
+    };
+    
+    const allSkills = Object.values(appData.skills).flat();
+    const skillsTagsContainer = document.getElementById('skills-tags');
+    allSkills.forEach(skill => {
+        const tag = document.createElement('span');
+        tag.className = 'bg-teal-100 text-teal-800 text-sm font-medium px-3 py-1 rounded-full';
+        tag.textContent = skill;
+        skillsTagsContainer.appendChild(tag);
+    });
+
+    const skillsCtx = document.getElementById('skillsChart').getContext('2d');
+    new Chart(skillsCtx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(appData.skills),
+            datasets: [{
+                label: 'Skills Distribution',
+                data: Object.values(appData.skills).map(s => s.length),
+                backgroundColor: Object.values(skillColors),
+                borderColor: '#F5F5F4',
+                borderWidth: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#44403C',
+                        font: { size: 14 }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            const value = context.parsed;
+                            label += `${value} skills`;
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    const experienceGrid = document.getElementById('experience-grid');
+    appData.experience.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'bg-stone-50 border border-stone-200 rounded-lg p-6 flex flex-col hover:shadow-xl hover:-translate-y-1 transition-all duration-300';
+        const icon = item.type === 'internship' ? '💼' : '💻';
+        card.innerHTML = `
+            <div class="flex-grow">
+                <p class="text-2xl mb-2">${icon}</p>
+                <h3 class="text-xl font-bold mb-2">${item.title}</h3>
+                <p class="text-stone-500 mb-4">${item.company || 'Personal Project'}</p>
+                <p class="text-stone-600">${item.short}</p>
+            </div>
+            <button data-title="${item.title}" class="learn-more-btn mt-6 text-left font-semibold text-teal-600 hover:text-teal-800 transition">Learn More &rarr;</button>
+        `;
+        experienceGrid.appendChild(card);
+    });
+
+    const educationTextContainer = document.getElementById('education-text');
+    appData.education.forEach(edu => {
+        const div = document.createElement('div');
+        div.className = "bg-white p-4 rounded-lg shadow-sm border border-stone-200";
+        div.innerHTML = `
+            <p class="font-bold text-teal-700">${edu.degree}</p>
+            <p class="text-stone-600">${edu.institution}</p>
+            <p class="text-stone-500 text-sm">${edu.years}</p>
+        `;
+        educationTextContainer.appendChild(div);
+    });
+
+    const educationCtx = document.getElementById('educationChart').getContext('2d');
+    new Chart(educationCtx, {
+        type: 'bar',
+        data: {
+            labels: appData.education.map(e => e.degree),
+            datasets: [{
+                label: 'Academic Score (%)',
+                data: appData.education.map(e => e.value),
+                backgroundColor: 'rgba(13, 148, 136, 0.7)',
+                borderColor: 'rgba(13, 148, 136, 1)',
+                borderWidth: 1,
+                borderRadius: 5
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    max: 100,
+                    grid: { display: false },
+                     ticks: { color: '#44403C' }
+                },
+                y: {
+                    grid: { color: '#E7E5E4' },
+                    ticks: { color: '#44403C' }
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                     callbacks: {
+                        label: function(context) {
+                            const index = context.dataIndex;
+                            const original = appData.education[index];
+                            return `${original.score} ${original.type}`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    const achievementsGrid = document.getElementById('achievements-grid');
+    appData.achievements.forEach(ach => {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-lg p-6 text-center shadow-lg border border-stone-200';
+        card.innerHTML = `
+            <p class="text-4xl mb-4">${ach.icon}</p>
+            <h3 class="text-xl font-bold mb-2">${ach.title}</h3>
+            <p class="text-stone-600">${ach.description}</p>
+        `;
+        achievementsGrid.appendChild(card);
+    });
+
+    const modal = document.getElementById('project-modal');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    const modalTitle = document.getElementById('modal-title');
+    const modalDescription = document.getElementById('modal-description');
+    const modalDetails = document.getElementById('modal-details');
+    const modalTags = document.getElementById('modal-tags');
+    const modalLink = document.getElementById('modal-link');
+
+    document.querySelectorAll('.learn-more-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const title = btn.getAttribute('data-title');
+            const data = appData.experience.find(item => item.title === title);
+            
+            modalTitle.textContent = data.title;
+            modalDescription.textContent = data.description;
+            
+            modalDetails.innerHTML = '';
+            data.details.forEach(detail => {
+                const p = document.createElement('p');
+                p.className = 'flex items-start';
+                p.innerHTML = `<span class="text-teal-500 mr-2 mt-1">&#10003;</span> ${detail}`;
+                modalDetails.appendChild(p);
+            });
+            
+            modalTags.innerHTML = '';
+            data.tags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = 'bg-stone-200 text-stone-700 px-2 py-1 text-sm rounded';
+                span.textContent = tag;
+                modalTags.appendChild(span);
+            });
+
+            if (data.link) {
+                modalLink.href = data.link;
+                modalLink.style.display = 'inline-block';
+            } else {
+                modalLink.style.display = 'none';
+            }
+
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.querySelector('.modal-content').classList.remove('scale-95');
+        });
+    });
+
+    const closeModal = () => {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        modal.querySelector('.modal-content').classList.add('scale-95');
+    };
+
+    modalCloseBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+
+});
+</script>
+
+</body>
+</html>
